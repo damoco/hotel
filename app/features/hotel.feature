@@ -1,12 +1,12 @@
 Feature: Hotel
 
   Background:
-    Given Room availability:
-      | date       | number | available |
-      | 2021-11-06 | 1      | true      |
-      | 2021-11-06 | 2      | false     |
-      | 2021-11-07 | 1      | false     |
-      | 2021-11-07 | 2      | false     |
+    Given The hotel has 2 rooms
+    And The following rooms are reserved:
+      | date       | room |
+      | 2021-11-06 | 2    |
+      | 2021-11-07 | 1    |
+      | 2021-11-07 | 2    |
 
   Scenario: Booking
   As a guest
