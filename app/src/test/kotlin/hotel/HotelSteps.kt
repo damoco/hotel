@@ -2,17 +2,19 @@ package hotel
 
 import hotel.model.Booking
 import hotel.model.HotelData
-import hotel.module.Hotel.findAvailableRoomsOn
+import hotel.module.Hotel.*
 import io.cucumber.java.ParameterType
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 
 class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
+	private lateinit var lastBooking: Booking
 	private var data = HotelData(emptySet(), emptySet())
 
 	@Given("The hotel has {int} rooms")
@@ -53,15 +55,16 @@ class HotelSteps {
 		this.availableRooms shouldBe availableRooms.map { it["number"] }
 	}
 
-	@io.cucumber.java.en.When("I book room {int}")
-	fun i_book_room(room: Int) {
-
+	@io.cucumber.java.en.When("I book room {int} on {date}")
+	fun i_book_room(room: Int, date: LocalDate) {
+		data = bookRoom(data, date, room, "me")
+		lastBooking = Booking("me", room, date)
 	}
 
 	@Then("it is included in my bookings list")
 	fun it_is_included_in_my_bookings_list() {
-		// Write code here that turns the phrase above into concrete actions
-		throw io.cucumber.java.PendingException()
+		val bookingsByGuest = bookingsByGuest(data, "me")
+		bookingsByGuest shouldContain lastBooking
 	}
 
 	@Given("another guy booked room {int}")

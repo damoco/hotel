@@ -18,4 +18,12 @@ public interface Hotel {
 		System.out.printf("findAvailableRoomsOn: %s, %s, %s%n", data.rooms(), booked4Date, r);
 		return Set.copyOf(r);
 	}
+
+	static HotelData bookRoom(HotelData data, LocalDate date, int room, String guestName) {
+		return data.addBooking(new Booking(guestName, room, date));
+	}
+
+	static Set<Booking> bookingsByGuest(HotelData data, String guestName) {
+		return data.bookings().stream().filter(booking -> booking.guestName().equals(guestName)).collect(toUnmodifiableSet());
+	}
 }

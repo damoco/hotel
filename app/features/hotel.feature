@@ -16,7 +16,7 @@ Feature: Hotel
     Then I should be able to see the room list:
       | number |
       | 1      |
-    When I book room 1
+    When I book room 1 on 2021-11-06
     Then it is included in my bookings list
 
   Scenario: Booking conflict
