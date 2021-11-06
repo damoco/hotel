@@ -67,10 +67,9 @@ class HotelSteps {
 		bookingsByGuest shouldContain lastBooking
 	}
 
-	@Given("another guy booked room {int}")
-	fun another_guy_booked_room(int1: Int?) {
-		// Write code here that turns the phrase above into concrete actions
-		throw io.cucumber.java.PendingException()
+	@Given("another guy booked room {int} on {date}")
+	fun another_guy_booked_room(room: Int, date: LocalDate) {
+		data = bookRoom(data, date, room, "another_guy")
 	}
 
 	@Then("I should get warn that the room was booked")
