@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
-	private var data = HotelData(emptySet(), emptyList())
+	private var data = HotelData(emptySet(), emptySet())
 
 	@Given("The hotel has {int} rooms")
 	fun the_hotel_has_rooms(size: Int) {
@@ -22,7 +22,7 @@ class HotelSteps {
 
 	@Given("The following rooms are reserved:")
 	fun the_following_rooms_are_reserved(bookings: List<Map<String, String>>) {
-		data = data.withBookings(bookings.map { Booking("somebody", it["room"]!!.toInt(), it["date"]) })
+		data = data.withBookings(bookings.map { Booking("somebody", it["room"]!!.toInt(), it["date"]) }.toSet())
 	}
 
 //	@Given("Room availability:")
@@ -54,9 +54,8 @@ class HotelSteps {
 	}
 
 	@io.cucumber.java.en.When("I book room {int}")
-	fun i_book_room(int1: Int?) {
-		// Write code here that turns the phrase above into concrete actions
-		throw io.cucumber.java.PendingException()
+	fun i_book_room(room: Int) {
+
 	}
 
 	@Then("it is included in my bookings list")
