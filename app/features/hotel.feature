@@ -2,17 +2,17 @@ Feature: Hotel
 
   Background:
     Given there are status of rooms:
-      | date     | number | available |
-      | 20211106 | 1      | true      |
-      | 20211106 | 2      | false     |
-      | 20211107 | 1      | false     |
-      | 20211107 | 2      | false     |
+      | date       | number | available |
+      | 2021-11-06 | 1      | true      |
+      | 2021-11-06 | 2      | false     |
+      | 2021-11-07 | 1      | false     |
+      | 2021-11-07 | 2      | false     |
 
   Scenario: Booking
   As a guest
   In able to booking a room
   I need find the available rooms on a given date & booking
-    When I find available rooms on 20211106
+    When I find available rooms at 2021-11-06
     Then I got
       | number |
       | 1      |

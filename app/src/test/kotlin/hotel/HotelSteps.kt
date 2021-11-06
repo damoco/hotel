@@ -1,8 +1,10 @@
 package hotel
 
+import io.cucumber.java.ParameterType
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.When
+import java.awt.print.Book
+import java.time.LocalDate
 
 
 class HotelSteps {
@@ -11,8 +13,14 @@ class HotelSteps {
 //		println("" + status.get(0).get("number")?.javaClass)
 	}
 
-	@io.cucumber.java.en.When("I find available rooms on {int}")
-	fun i_find_available_rooms_on(date: String) {
+	@ParameterType(".*")
+	fun date(date: String): LocalDate {
+		return LocalDate.parse(date)
+	}
+
+	@io.cucumber.java.en.When("I find available rooms at {date}")
+	fun i_find_available_rooms_at(date: LocalDate) {
+		println(date)
 	}
 
 	@Then("I got")
