@@ -1,7 +1,7 @@
 Feature: Hotel
 
   Background:
-    Given there are status of rooms:
+    Given Room availability:
       | date       | number | available |
       | 2021-11-06 | 1      | true      |
       | 2021-11-06 | 2      | false     |
@@ -12,8 +12,8 @@ Feature: Hotel
   As a guest
   In able to booking a room
   I need find the available rooms on a given date & booking
-    When I find available rooms at 2021-11-06
-    Then I got
+    When I find available rooms on 2021-11-06
+    Then I should be able to see the room list:
       | number |
       | 1      |
     When I book room 1
@@ -25,7 +25,7 @@ Feature: Hotel
   I need notice user that the booking room is not available
     Given another guy booked room 1
     When I book room 1
-    Then I get warn the room was already booked by other user
+    Then I should get warn that the room was booked
 #Task
 #Your task is to implement a simple hotel booking manager in Java, as a microservice API.
 # The number of rooms should be configurable, and it should expose the following methods:
