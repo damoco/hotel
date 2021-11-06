@@ -1,7 +1,7 @@
 Feature: Hotel
 
   Background:
-    Given there are rooms:
+    Given there are status of rooms:
       | date     | number | available |
       | 20211106 | 1      | true      |
       | 20211106 | 2      | false     |
@@ -43,18 +43,18 @@ Feature: Hotel
 #Extra credit
 #Make your solution thread-safe.
 
-#Job title: Senior Developer
+#Job title:Senior Developer
 #
-#Location: SCB Tower, Pudong Disctrict, Shanghai 
-#The Role Responsibilities & Our Ideal Candidate
-#The successful candidate will be a senior developer in an Agile team building end-to-end solutions with both in-house and vendor components under API and cloud-based technology. 
-#Domain: Equity Derivative Products for Banking Customers
+#Location: SCB Tower, Pudong Disctrict, Shanghai
+#The Role Responsibilities &Our Ideal Candidate
+#The successful candidate will be a senior developer in an Agile team building end-to-end solutions with both in-house and vendor components under API and cloud-based technology.
+#Domain:Equity Derivative Products for Banking Customers
 #Mission
 #Build scalable, reusable, time-critical applications and services with API architecture on Cloud platform under an agile delivery model.
 #Contribute to CI/CD automation agenda throughout the whole software development cycle (build, test, package, provision, deploy, and monitor).
 #Ensure best practice and quality of coding, via test automation and adoption of design patterns.
 #Provide level 2 application support.
-# 
+#
 #Start-up mindset on resolving issues in all aspect of software development (Development, OS, Installation, DevOps Integration).
 #Adhere to bank’s policy and control on software development and release.
 #Strengths and capabilities
@@ -75,22 +75,20 @@ Feature: Hotel
 #Excellent written and verbal communication skills. Able to communicate with business stakeholders.
 #Outstanding problem-solving skills
 #Proactive, self-starter, autonomous, self-motivated, multi-tasking, solution oriented with proven results
-# 
-# 
-# 
+
 #职位名称：高级开发人员
-# 
+#
 #地点：渣打银行大厦， 上海浦东新区
 #
 #角色职责和我们的理想人选
-#成功的候选人将是一个敏捷团队中的高级开发人员，在API和基于云的技术下，利用内部和供应商的组件建立端到端的解决方案。 
-#领域。 面向银行客户的股票衍生产品
+#成功的候选人将是一个敏捷团队中的高级开发人员，在API和基于云的技术下，利用内部和供应商的组件建立端到端的解决方案。
+#领域。面向银行客户的股票衍生产品
 #任务
 #1.在敏捷交付模式下，在云平台上建立可扩展、可重用、时间关键的应用程序和服务，并采用API架构。
 #2.在整个软件开发周期（构建、测试、打包、供应、部署和监控）中为CI/CD自动化议程作出贡献。
 #3.通过测试自动化和采用设计模式，确保编码的最佳实践和质量。
 #4.提供2级应用支持。
-# 
+#
 #1.在软件开发的所有方面（开发、操作系统、安装、DevOps集成），以创业的心态解决问题。
 #2.遵守银行关于软件开发和发布的政策和控制。
 #
@@ -112,4 +110,3 @@ Feature: Hotel
 #优秀的中英书面和口头沟通能力。能够与商业利益相关者沟通。
 #出色的解决问题的能力
 #积极主动，自我启动，自主，自我激励，多任务，以解决方案为导向，并取得良好效果
-# 

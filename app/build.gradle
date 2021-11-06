@@ -5,11 +5,22 @@
  * For more details take a look at the 'Building Java & JVM projects' chapter in the Gradle
  * User Manual available at https://docs.gradle.org/7.2/userguide/building_java_projects.html
  */
-
+buildscript {
+    ext.kotlin_version = '1.5.31'
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+    repositories {
+        maven {
+            url "https://mirrors.tencent.com/nexus/repository/maven-public/"
+        }
+    }
+}
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
 }
+apply plugin: 'kotlin'
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -17,12 +28,10 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
-
-    // This dependency is used by the application.
     //    implementation 'com.google.guava:guava:30.1.1-jre'
     testImplementation 'io.cucumber:cucumber-java:7.0.0'
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 application {
@@ -55,7 +64,21 @@ task cucumber() {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', 'gradle.cucumber', 'features']
+            args = ['--plugin', 'pretty', '--glue', 'hotel', 'features']
         }
     }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "16"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "16"
+    }
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
