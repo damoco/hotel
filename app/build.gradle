@@ -79,5 +79,8 @@ sourceSets {
         resources {
             srcDir 'features'
         }
+        java {
+            srcDir 'src/cucumber/kotlin'
+        }
     }
 }

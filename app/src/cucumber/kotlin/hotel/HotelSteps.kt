@@ -9,7 +9,6 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-
 class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
 	private lateinit var lastBooking: Booking
@@ -40,7 +39,7 @@ class HotelSteps {
 		this.availableRooms shouldBe availableRooms.map { it["number"] }
 	}
 
-	@io.cucumber.java.en.When("I book room {int} on {date}")
+	@When("I book room {int} on {date}")
 	fun i_book_room(room: Int, date: LocalDate) {
 		lastException = null
 		lastBooking = Booking(MY_GUEST_NAME, room, date)
