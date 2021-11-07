@@ -23,7 +23,7 @@ class HotelController {
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
 		val previous = current.get()
 		val next = bookRoom(previous, date, room, guestName)
-//		current.set(next)
+//		current.set(next)// 并发booking会冲突
 		current.updateAndGet {
 			if (it == previous) next
 			else if (it.bookings.none { booking -> booking.date == date && booking.room == room }) {
