@@ -8,9 +8,8 @@ import java.time.LocalDate
 import java.util.stream.IntStream
 
 internal class HotelControllerTest {
-
 	@Test
-	fun bookRoom() {
+	fun bookRoomConcurrency() {
 		val c = HotelController()
 		c.configRoomSize(1)
 		val date = LocalDate.of(2021, 11, 7)
@@ -19,9 +18,25 @@ internal class HotelControllerTest {
 //				println("Thread $i start at: ${LocalTime.now()}")
 				Either.catch { c.bookRoom(date, 1, "guest-$i") }
 //					.also { println("Thread $i end at: ${LocalTime.now()}") }
+//					.also { println("Result: $it") }
 			}
-//			.also { println("Result: $it") }
 			.toList()
 		eitherList.forExactly(1) { it.shouldBeRight() }
+	}
+
+	@Test
+	fun book2RoomsConcurrency() {
+		val c = HotelController()
+		c.configRoomSize(2)
+		val date = LocalDate.of(2021, 11, 7)
+		val eitherList = IntStream.rangeClosed(1, 1000).parallel().boxed()
+			.map { i ->
+//				println("Thread $i start at: ${LocalTime.now()}")
+				Either.catch { c.bookRoom(date, i % 2 + 1, "guest-$i") }
+//					.also { println("Thread $i end at: ${LocalTime.now()}") }
+//					.also { println("Result: $it") }
+			}
+			.toList()
+		eitherList.forExactly(2) { it.shouldBeRight() }
 	}
 }

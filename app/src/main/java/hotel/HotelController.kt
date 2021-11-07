@@ -2,9 +2,11 @@ package hotel
 
 import hotel.model.Booking
 import hotel.model.HotelData
-import hotel.service.Hotel
-import java.lang.RuntimeException
+import hotel.service.Hotel.*
 import java.time.LocalDate
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toUnmodifiableSet
+import java.util.stream.Stream
 
 class HotelController {
 	private var data = HotelData(emptySet(), emptySet())
@@ -17,18 +19,22 @@ class HotelController {
 		data = data.withBookings(bookings)
 	}
 
-	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = Hotel.findAvailableRoomsOn(data, date)
+	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(data, date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
-		val previousData = data
-		val nextData = Hotel.bookRoom(data, date, room, guestName)
+		val previousBookings = data.bookings
+		val nextData = bookRoom(data, date, room, guestName)
+		// Optimistic Concurrency Control
 		synchronized(this) {
-			if (previousData == data)
+			if (previousBookings == data.bookings) {
 				data = nextData
-			else throw RuntimeException("System state has been changed. Please try again.")
+			} else if (data.bookings.none { it.date == date && it.room == room }) {
+				println("Will merge state: $nextData to $data")
+				data = data.withBookings(data.bookings + nextData.bookings)
+			} else bookingConflictException(date, room)
 		}
 		println("book result: $data")
 	}
 
-	fun bookingsByGuest(guestName: String): Set<Booking> = Hotel.bookingsByGuest(data, guestName)
+	fun bookingsByGuest(guestName: String): Set<Booking> = bookingsByGuest(data, guestName)
 }
