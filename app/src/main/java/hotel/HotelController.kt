@@ -10,6 +10,7 @@ class HotelController {
 	private var current = AtomicReference(HotelData(emptySet(), emptySet()))
 
 	fun configRoomSize(size: Int) {
+		println("configRoomSize: $size")
 		current.getAndUpdate { it.withSize(size) }
 	}
 
@@ -29,7 +30,7 @@ class HotelController {
 				it.withBookings(it.bookings + next.bookings)
 			} else throw bookingConflictException(date, room)
 		}
-			.also { println("book result: $current") }
+//			.also { println("book result: $current") }
 	}
 
 	fun bookingsByGuest(guestName: String): Set<Booking> = bookingsByGuest(current.get(), guestName)
