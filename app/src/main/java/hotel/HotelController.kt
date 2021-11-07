@@ -3,6 +3,7 @@ package hotel
 import hotel.model.Booking
 import hotel.model.HotelData
 import hotel.service.Hotel
+import java.lang.RuntimeException
 import java.time.LocalDate
 
 class HotelController {
@@ -19,7 +20,13 @@ class HotelController {
 	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = Hotel.findAvailableRoomsOn(data, date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
-		data = Hotel.bookRoom(data, date, room, guestName)
+		val previousData = data
+		val nextData = Hotel.bookRoom(data, date, room, guestName)
+		synchronized(this) {
+			if (previousData == data)
+				data = nextData
+			else throw RuntimeException("System state has been changed. Please try again.")
+		}
 		println("book result: $data")
 	}
 
