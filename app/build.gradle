@@ -74,10 +74,10 @@ repositories {
     mavenCentral()
 }
 
-//sourceSets {
-//    test {
-//        resources {
-//            srcDir 'features'
-//        }
-//    }
-//}
+sourceSets {
+    test {
+        resources {
+            srcDir 'features'
+        }
+    }
+}
