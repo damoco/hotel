@@ -31,5 +31,5 @@ jobs:
     - name: test reports
       uses: actions/upload-artifact@v2
       with:
-        name: cucumber-report
-        path: app/build/reports/cucumber.html
+        name: test-reports
+        path: app/build/reports

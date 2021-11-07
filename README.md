@@ -11,3 +11,6 @@ JDK版本: 16
 - 为了避免复杂性, 没有使用传统的OO或者FP风格, 使用了Data-Oriented programming(DOP)的风格.
 - 用Kotlin增强交付能力.
 - 测试使用了Kotlin + kotest assert库
+
+## 分支
+web-server分支准备写一个简易的http server, 还未完成.
