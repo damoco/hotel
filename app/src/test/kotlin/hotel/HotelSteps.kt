@@ -9,12 +9,15 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import java.lang.Exception
 import java.time.LocalDate
 
 
 class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
 	private lateinit var lastBooking: Booking
+	private var lastException: Exception? = null
 	private var data = HotelData(emptySet(), emptySet())
 
 	@Given("The hotel has {int} rooms")
@@ -57,8 +60,13 @@ class HotelSteps {
 
 	@io.cucumber.java.en.When("I book room {int} on {date}")
 	fun i_book_room(room: Int, date: LocalDate) {
-		data = bookRoom(data, date, room, "me")
+		lastException = null
 		lastBooking = Booking("me", room, date)
+		try {
+			data = bookRoom(data, date, room, "me")
+		} catch (e: Exception) {
+			lastException = e
+		}
 	}
 
 	@Then("it is included in my bookings list")
@@ -72,10 +80,9 @@ class HotelSteps {
 		data = bookRoom(data, date, room, "another_guy")
 	}
 
-	@Then("I should get warn that the room was booked")
-	fun i_get_warn_the_room_was_already_booked_by_other_user() {
-		// Write code here that turns the phrase above into concrete actions
-		throw io.cucumber.java.PendingException()
+	@Then("I should get warn that {string}")
+	fun i_get_warn(msg: String) {
+		lastException?.message shouldBe msg
 	}
 
 }

@@ -25,7 +25,7 @@ Feature: Hotel
   I need notice user that the booking room is not available
     Given another guy booked room 1 on 2021-11-06
     When I book room 1 on 2021-11-06
-    Then I should get warn that the room was booked
+    Then I should get warn that "the room 1 on date 2021-11-06 was already been booked"
 #Task
 #Your task is to implement a simple hotel booking manager in Java, as a microservice API.
 # The number of rooms should be configurable, and it should expose the following methods:
