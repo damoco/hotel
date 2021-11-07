@@ -2,7 +2,7 @@ package hotel
 
 import hotel.model.Booking
 import hotel.model.HotelData
-import hotel.module.Hotel
+import hotel.service.Hotel
 import java.time.LocalDate
 
 class HotelController {

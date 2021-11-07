@@ -1,4 +1,4 @@
-package hotel.module;
+package hotel.service;
 
 import hotel.model.Booking;
 import hotel.model.HotelData;
