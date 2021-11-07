@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.util.stream.IntStream
 
-private const val THREADS = 100
+private const val THREADS = 1000
 
 internal class HotelControllerTest {
 	@Test

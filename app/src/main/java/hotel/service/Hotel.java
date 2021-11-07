@@ -21,12 +21,12 @@ public interface Hotel {
 
 	static HotelData bookRoom(HotelData data, LocalDate date, int room, String guestName) {
 		if (data.bookings().stream().anyMatch(booking -> booking.date().equals(date) && booking.room() == room))
-			bookingConflictException(date, room);
+			throw bookingConflictException(date, room);
 		return data.addBooking(new Booking(guestName, room, date));
 	}
 
-	static void bookingConflictException(LocalDate date, int room) {
-		throw new RuntimeException("""
+	static RuntimeException bookingConflictException(LocalDate date, int room) {
+		return new RuntimeException("""
 				the room %s on date %s is already been booked""".formatted(room, date));
 	}
 

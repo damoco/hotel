@@ -20,7 +20,15 @@ class HotelController {
 	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(current.get(), date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
-		current.updateAndGet { bookRoom(it, date, room, guestName) }
+		val previous = current.get()
+		val next = bookRoom(previous, date, room, guestName)
+		current.updateAndGet {
+			if (it == previous) next
+			else if (it.bookings.none { booking -> booking.date == date && booking.room == room }) {
+				println("Will merge next: $next to current: $it")
+				it.withBookings(it.bookings + next.bookings)
+			} else throw bookingConflictException(date, room)
+		}
 			.also { println("book result: $current") }
 	}
 
