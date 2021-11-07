@@ -16,11 +16,11 @@ class HotelController {
 		data = data.withBookings(bookings)
 	}
 
-	fun findAvailableRoomsOn(date: LocalDate) = Hotel.findAvailableRoomsOn(data, date)
+	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = Hotel.findAvailableRoomsOn(data, date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
 		data = Hotel.bookRoom(data, date, room, guestName)
 	}
 
-	fun bookingsByGuest(guestName: String) = Hotel.bookingsByGuest(data, guestName)
+	fun bookingsByGuest(guestName: String): Set<Booking> = Hotel.bookingsByGuest(data, guestName)
 }
