@@ -20,6 +20,7 @@ class HotelController {
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
 		data = Hotel.bookRoom(data, date, room, guestName)
+		println("book result: $data")
 	}
 
 	fun bookingsByGuest(guestName: String): Set<Booking> = Hotel.bookingsByGuest(data, guestName)

@@ -9,7 +9,8 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 public record HotelData(Set<Integer> rooms, Set<Booking> bookings) {
 
 	public HotelData withSize(int size) {
-		return new HotelData(IntStream.rangeClosed(1, size).boxed().collect(toUnmodifiableSet()), bookings);
+		final var rooms = IntStream.rangeClosed(1, size).boxed().collect(toUnmodifiableSet());
+		return new HotelData(rooms, bookings);
 	}
 
 	public HotelData withBookings(Set<Booking> bookings) {
