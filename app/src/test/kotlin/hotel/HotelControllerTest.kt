@@ -3,6 +3,10 @@ package hotel
 import arrow.core.Either
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.inspectors.forExactly
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -13,6 +17,7 @@ import java.util.concurrent.Executors
 private const val THREADS = 1000
 private val date = LocalDate.of(2021, 11, 7)
 
+@DelicateCoroutinesApi
 internal class HotelControllerTest {
 	@Test
 	fun bookRoomConcurrency() = bookRoomsConcurrency(1)
@@ -21,9 +26,25 @@ internal class HotelControllerTest {
 	fun book2RoomsConcurrency() = bookRoomsConcurrency(2)
 
 	@Test
-	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrency((3..100).random()) }
+	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrencyJavaThread((3..100).random()) }
+	@Test
+	fun bookXRoomsConcurrencyCoroutine() = repeat(3) { bookRoomsConcurrency((3..100).random()) }
 
-	private fun bookRoomsConcurrency(size: Int) {
+	private fun bookRoomsConcurrency(size: Int) = runBlocking {
+		val c = HotelController()
+		c.configRoomSize(size)
+		val eitherList = (1..THREADS).map { i ->
+			GlobalScope.async {
+//				println("Thread $i start at: ${LocalTime.now()}")
+				Either.catch { c.bookRoom(date, i % size + 1, "guest-$i") }
+//					.also { println("Thread $i end at: ${LocalTime.now()}") }
+			}
+			//					.also { println("Result: $it") }
+		}.map { it.await() }
+		eitherList.forExactly(size) { it.shouldBeRight() }
+	}
+
+	private fun bookRoomsConcurrencyJavaThread(size: Int) {
 		val c = HotelController()
 		c.configRoomSize(size)
 		val eitherList = fixedThreadPool.invokeAll((1..THREADS).map { i ->
