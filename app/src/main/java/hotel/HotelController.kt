@@ -20,8 +20,8 @@ class HotelController {
 	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(current.get(), date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
-		current.getAndUpdate { bookRoom(it, date, room, guestName) }
-		println("book result: $current")
+		current.updateAndGet { bookRoom(it, date, room, guestName) }
+			.also { println("book result: $current") }
 	}
 
 	fun bookingsByGuest(guestName: String): Set<Booking> = bookingsByGuest(current.get(), guestName)
