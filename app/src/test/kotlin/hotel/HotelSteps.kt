@@ -66,17 +66,6 @@ class HotelSteps {
 		lastException?.message shouldBe msg
 	}
 
-	//	@Given("Room availability:")
-//	fun room_availability(status: List<Map<String, String>>) {
-//		val occupied = status.groupBy { it["date"]!! }.mapKeys { LocalDate.parse(it.key) }
-//			.mapValues { (_, dateOccupied) ->
-//				dateOccupied.associateBy { it["room"]!! }.mapKeys { it.key.toInt() }
-//					.mapValues { it.value["available"] }
-//					.filterValues { it == "false" }
-//					.mapValues { 0 }
-//			}
-//		data = HotelData(occupied)
-//		println(data)
 	companion object {
 		private const val MY_GUEST_NAME = "me"
 	}
