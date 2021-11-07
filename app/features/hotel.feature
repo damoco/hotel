@@ -2,7 +2,7 @@ Feature: Hotel
 
   Background:
     Given The hotel has 2 rooms
-    And The following rooms are reserved:
+    And The following rooms are booked:
       | date       | room |
       | 2021-11-06 | 2    |
       | 2021-11-07 | 1    |
@@ -11,9 +11,9 @@ Feature: Hotel
   Scenario: Booking
   As a guest
   In able to booking a room
-  I need find the available rooms on a given date & booking
+  I need to find available rooms on a given date and create a booking
     When I find available rooms on 2021-11-06
-    Then I should be able to see the room list:
+    Then I should be able to see the following room list:
       | number |
       | 1      |
     When I book room 1 on 2021-11-06
@@ -21,8 +21,8 @@ Feature: Hotel
 
   Scenario: Booking conflict
   As hotel system
-  In able to ???
-  I need notice user that the booking room is not available
+  In able to avoid duplicated booking
+  I need to notice guest that the booking is not available
     Given another guy booked room 1 on 2021-11-06
     When I book room 1 on 2021-11-06
     Then I should get warn that "the room 1 on date 2021-11-06 was already been booked"

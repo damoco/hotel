@@ -25,8 +25,8 @@ class HotelSteps {
 		data = data.withSize(size)
 	}
 
-	@Given("The following rooms are reserved:")
-	fun the_following_rooms_are_reserved(bookings: List<Map<String, String>>) {
+	@Given("The following rooms are booked:")
+	fun the_following_rooms_are_booked(bookings: List<Map<String, String>>) {
 		data = data.withBookings(bookings.map { Booking("somebody", it["room"]!!.toInt(), it["date"]) }.toSet())
 	}
 
@@ -53,7 +53,7 @@ class HotelSteps {
 		availableRooms = findAvailableRoomsOn(data, date)
 	}
 
-	@Then("I should be able to see the room list:")
+	@Then("I should be able to see the following room list:")
 	fun i_got_rooms(availableRooms: List<Map<String, Int>>) {
 		this.availableRooms shouldBe availableRooms.map { it["number"] }
 	}
