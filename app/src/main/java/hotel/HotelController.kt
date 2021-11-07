@@ -7,22 +7,22 @@ import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 
 class HotelController {
-	private var data = AtomicReference(HotelData(emptySet(), emptySet()))
+	private var current = AtomicReference(HotelData(emptySet(), emptySet()))
 
 	fun configRoomSize(size: Int) {
-		data.getAndUpdate { it.withSize(size) }
+		current.getAndUpdate { it.withSize(size) }
 	}
 
 	fun setBookings(bookings: Set<Booking>) {
-		data.getAndUpdate { it.withBookings(bookings) }
+		current.getAndUpdate { it.withBookings(bookings) }
 	}
 
-	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(data.get(), date)
+	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(current.get(), date)
 
 	fun bookRoom(date: LocalDate, room: Int, guestName: String) {
-		data.getAndUpdate { bookRoom(it, date, room, guestName) }
-		println("book result: $data")
+		current.getAndUpdate { bookRoom(it, date, room, guestName) }
+		println("book result: $current")
 	}
 
-	fun bookingsByGuest(guestName: String): Set<Booking> = bookingsByGuest(data.get(), guestName)
+	fun bookingsByGuest(guestName: String): Set<Booking> = bookingsByGuest(current.get(), guestName)
 }
