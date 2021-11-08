@@ -13,17 +13,17 @@ private val date = LocalDate.of(2021, 11, 7)
 @DelicateCoroutinesApi
 internal class HotelControllerTest {
 	@Test
-	fun bookRoomConcurrency() = bookRoomsConcurrency(1, this::run)
+	fun bookRoomConcurrency() = bookRoomsConcurrency(1)
 
 	@Test
-	fun book2RoomsConcurrency() = bookRoomsConcurrency(2, this::run)
+	fun book2RoomsConcurrency() = bookRoomsConcurrency(2)
 
 	@Test
-	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrency((3..100).random(), this::run) }
+	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrency((3..100).random()) }
 
 	private fun bookRoomsConcurrency(
 		size: Int,
-		runConcurrently: (function: (Int) -> Either<Throwable, Unit>) -> List<Either<Throwable, Unit>>
+		runConcurrently: (function: (Int) -> Either<Throwable, Unit>) -> List<Either<Throwable, Unit>> = ::run
 	) {
 		val c = HotelController()
 		c.configRoomSize(size)
