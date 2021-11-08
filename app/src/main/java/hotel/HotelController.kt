@@ -11,11 +11,11 @@ class HotelController {
 
 	fun configRoomSize(size: Int) {
 		println("configRoomSize: $size")
-		current.getAndUpdate { it.withSize(size) }
+		current.updateAndGet { it.withSize(size) }
 	}
 
 	fun setBookings(bookings: Set<Booking>) {
-		current.getAndUpdate { it.withBookings(bookings) }
+		current.updateAndGet { it.withBookings(bookings) }
 	}
 
 	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = findAvailableRoomsOn(current.get(), date)
@@ -27,7 +27,7 @@ class HotelController {
 		current.updateAndGet {
 			if (it == previous) next
 			else if (it.bookings.none { booking -> booking.date == date && booking.room == room }) {
-				println("Will merge next: $next to current: $it")
+//				println("Will merge next: $next to current: $it")
 				it.withBookings(it.bookings + next.bookings)
 			} else throw bookingConflictException(date, room)
 		}

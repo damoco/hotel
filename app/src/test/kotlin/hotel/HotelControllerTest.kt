@@ -19,21 +19,25 @@ internal class HotelControllerTest {
 	fun book2RoomsConcurrency() = bookRoomsConcurrency(2)
 
 	@Test
-	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrency((3..100).random()) }
+	fun bookXRoomsConcurrency() = repeat(3) { bookRoomsConcurrency((3..50).random(), (1..7).random()) }
 
 	private fun bookRoomsConcurrency(
 		size: Int,
+		days: Int = 1,
 		runConcurrently: (function: (Int) -> Either<Throwable, Unit>) -> List<Either<Throwable, Unit>> = ::run
 	) {
 		val c = HotelController()
 		c.configRoomSize(size)
 		val eitherList = runConcurrently { i: Int ->
 //			println("Thread $i start at: ${LocalTime.now()}")
-			Either.catch { c.bookRoom(date, i % size + 1, "guest-$i") }
+			val plusDays = i / size % days
+			val room = i % size + 1
+//			println("$plusDays, $room")
+			Either.catch { c.bookRoom(date.plusDays(plusDays.toLong()), room, "guest-$i") }
 //				.also { println("Thread $i end at: ${LocalTime.now()}") }
 //					.also { println("Result: $it") }
 		}
-		eitherList.forExactly(size) { it.shouldBeRight() }
+		eitherList.forExactly(size * days) { it.shouldBeRight() }
 	}
 
 	private fun run(createEither: (Int) -> Either<Throwable, Unit>): List<Either<Throwable, Unit>> {
