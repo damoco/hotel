@@ -6,13 +6,8 @@ import hotel.service.Hotel.*
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 
-class HotelController {
-	private var current = AtomicReference(HotelData(emptySet(), emptySet()))
-
-	fun configRoomSize(size: Int) {
-		println("configRoomSize: $size")
-		current.updateAndGet { it.withSize(size) }
-	}
+class HotelController(size: Int) {
+	private var current = AtomicReference(HotelData(size, emptySet()))
 
 	fun setBookings(bookings: Set<Booking>) {
 		current.updateAndGet { it.withBookings(bookings) }

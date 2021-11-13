@@ -13,11 +13,11 @@ class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
 	private lateinit var lastBooking: Booking
 	private var lastException: Exception? = null
-	private val controller = HotelController()
+	private lateinit var controller: HotelController
 
 	@Given("The hotel has {int} rooms")
 	fun the_hotel_has_rooms(size: Int) {
-		controller.configRoomSize(size)
+		controller = HotelController(size)
 	}
 
 	@Given("The following rooms are booked:")

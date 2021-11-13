@@ -26,8 +26,7 @@ internal class HotelControllerTest {
 		days: Int = 1,
 		runConcurrently: (function: (Int) -> Either<Throwable, Unit>) -> List<Either<Throwable, Unit>> = ::run
 	) {
-		val c = HotelController()
-		c.configRoomSize(size)
+		val c = HotelController(size)
 		val eitherList = runConcurrently { i: Int ->
 //			println("Thread $i start at: ${LocalTime.now()}")
 			val plusDays = i / size % days
