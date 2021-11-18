@@ -7,7 +7,7 @@ Run unit tests: gradle test
 
 JDK version: 16
 ## Code style
-- Use immutable objects to simplify thread-safety issues, avoid the need for pessimistic locking.
+- Use concurrentMap to simplify thread-safety issues, avoid the need for synchronized.
 - Enhanced delivery speed with Kotlin.
 - Test uses the Kotlin + Kotest Assert library
 
