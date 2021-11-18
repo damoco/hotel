@@ -1,17 +1,42 @@
 package hotel
 
 import arrow.core.Either
+import hotel.exception.RoomNotExistException
 import io.kotest.assertions.arrow.core.shouldBeRight
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.inspectors.forExactly
-import kotlinx.coroutines.*
+import io.kotest.matchers.should
+import io.kotest.matchers.string.include
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
 private const val THREADS = 1000
-private val date = LocalDate.of(2021, 11, 7)
+private val DATE = LocalDate.of(2021, 11, 7)
 
 @DelicateCoroutinesApi
 internal class HotelControllerTest {
+	@Test
+	fun wrongRoomSize() {
+		shouldThrowExactly<IllegalArgumentException> {
+			HotelController(-1)
+		}
+		shouldThrowExactly<IllegalArgumentException> {
+			HotelController(0)
+		}
+	}
+
+	@Test
+	fun bookingRoomNotExist() {
+		shouldThrowExactly<RoomNotExistException> {
+			val c = HotelController(1)
+			c.bookRoom(DATE, 201, "guest")
+		}.message should include("201 not exist")
+	}
+
 	@Test
 	fun bookRoomConcurrency() = bookRoomsConcurrency(1)
 
@@ -32,7 +57,7 @@ internal class HotelControllerTest {
 			val plusDays = i / size % days
 			val room = i % size + 1
 //			println("$plusDays, $room")
-			Either.catch { c.bookRoom(date.plusDays(plusDays.toLong()), room, "guest-$i") }
+			Either.catch { c.bookRoom(DATE.plusDays(plusDays.toLong()), room, "guest-$i") }
 //				.also { println("Thread $i end at: ${LocalTime.now()}") }
 //					.also { println("Result: $it") }
 		}

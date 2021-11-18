@@ -1,5 +1,7 @@
 package hotel.service;
 
+import hotel.exception.BookingConflictException;
+import hotel.exception.RoomNotExistException;
 import hotel.model.Booking;
 import hotel.model.HotelData;
 
@@ -8,6 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
@@ -17,12 +20,10 @@ public class HotelService {
 	private final AtomicReference<HotelData> current;
 
 	public HotelService(int size) {
-		current = new AtomicReference<>(new HotelData(size, emptySet()));
-	}
-
-	private static RuntimeException bookingConflictException(LocalDate date, int room) {
-		return new RuntimeException("""
-				the room %s on date %s is already been booked""".formatted(room, date));
+		if (size < 1) throw new IllegalArgumentException("Room size cannot less than 1. Current: " + size);
+		final Set<Integer> rooms = IntStream.rangeClosed(1, size).boxed().collect(toUnmodifiableSet());
+		System.out.println("configRoomSize: " + size);
+		current = new AtomicReference<>(new HotelData(rooms, emptySet()));
 	}
 
 	public void setBookings(Set<Booking> bookings) {
@@ -41,8 +42,10 @@ public class HotelService {
 
 	public void bookRoom(LocalDate date, int room, String guestName) {
 		var previous = current.get();
+		final Set<Integer> rooms = previous.rooms();
+		if (!rooms.contains(room)) throw new RoomNotExistException(room, rooms);
 		if (previous.bookings().stream().anyMatch(booking -> booking.date().equals(date) && booking.room() == room))
-			throw bookingConflictException(date, room);
+			throw new BookingConflictException(date, room);
 		var next = previous.addBooking(new Booking(guestName, room, date));
 //		current.set(next)// concurrency problem
 		current.updateAndGet(data -> {
@@ -53,7 +56,7 @@ public class HotelService {
 								.collect(Collectors.toUnmodifiableSet());
 						return data.withBookings(sum);
 					}
-					throw bookingConflictException(date, room);
+					throw new BookingConflictException(date, room);
 				}
 		);
 	}
