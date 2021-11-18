@@ -5,12 +5,13 @@ import hotel.model.HotelData;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static hotel.service.Hotel.bookingConflictException;
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public class HotelService {
 	private final AtomicReference<HotelData> current;
@@ -19,17 +20,30 @@ public class HotelService {
 		current = new AtomicReference<>(new HotelData(size, emptySet()));
 	}
 
+	private static RuntimeException bookingConflictException(LocalDate date, int room) {
+		return new RuntimeException("""
+				the room %s on date %s is already been booked""".formatted(room, date));
+	}
+
 	public void setBookings(Set<Booking> bookings) {
 		current.updateAndGet(data -> data.withBookings(bookings));
 	}
 
 	public Set<Integer> findAvailableRoomsOn(LocalDate date) {
-		return Hotel.findAvailableRoomsOn(current.get(), date);
+		HotelData data = current.get();
+		final Set<Integer> bookedOnDate = data.bookings().stream().filter(booking -> booking.date().equals(date))
+				.map(Booking::room).collect(toUnmodifiableSet());
+		final Set<Integer> r = new TreeSet<>(data.rooms());
+		r.removeAll(bookedOnDate);
+		System.out.printf("findAvailableRoomsOn: %s, %s, %s%n", data.rooms(), bookedOnDate, r);
+		return Set.copyOf(r);
 	}
 
 	public void bookRoom(LocalDate date, int room, String guestName) {
 		var previous = current.get();
-		var next = Hotel.bookRoom(previous, date, room, guestName);
+		if (previous.bookings().stream().anyMatch(booking -> booking.date().equals(date) && booking.room() == room))
+			throw bookingConflictException(date, room);
+		var next = previous.addBooking(new Booking(guestName, room, date));
 //		current.set(next)// concurrency problem
 		current.updateAndGet(data -> {
 					if (data == previous) return next;
@@ -45,6 +59,6 @@ public class HotelService {
 	}
 
 	public Set<Booking> bookingsByGuest(String guestName) {
-		return Hotel.bookingsByGuest(current.get(), guestName);
+		return current.get().bookings().stream().filter(booking -> booking.guestName().equals(guestName)).collect(toUnmodifiableSet());
 	}
 }
