@@ -10,7 +10,7 @@ class HotelController(size: Int) {
 
 	fun findAvailableRoomsOn(date: LocalDate): Set<Int> = service.findAvailableRoomsOn(date)
 
-	fun bookRoom(date: LocalDate, room: Int, guestName: String) = service.bookRoom(date, room, guestName)
+	fun bookRoom(date: LocalDate, room: Int, guestName: String): Booking = service.bookRoom(date, room, guestName)
 
 	fun bookingsByGuest(guestName: String): Set<Booking> = service.bookingsByGuest(guestName)
 }

@@ -49,22 +49,23 @@ internal class HotelControllerTest {
 	private fun bookRoomsConcurrency(
 		size: Int,
 		days: Int = 1,
-		runConcurrently: (function: (Int) -> Either<Throwable, Unit>) -> List<Either<Throwable, Unit>> = ::run
+		runConcurrently: (function: (Int) -> Either<Throwable, Any>) -> List<Either<Throwable, Any>> = ::run
 	) {
 		val c = HotelController(size)
 		val eitherList = runConcurrently { i: Int ->
 //			println("Thread $i start at: ${LocalTime.now()}")
 			val plusDays = i / size % days
 			val room = i % size + 1
-//			println("$plusDays, $room")
-			Either.catch { c.bookRoom(DATE.plusDays(plusDays.toLong()), room, "guest-$i") }
+			val guestName = "guest-$i"
+			println("$plusDays, $room, $guestName")
+			Either.catch { c.bookRoom(DATE.plusDays(plusDays.toLong()), room, guestName) }
 //				.also { println("Thread $i end at: ${LocalTime.now()}") }
-//					.also { println("Result: $it") }
+				.also { println("Result: $it") }
 		}
 		eitherList.forExactly(size * days) { it.shouldBeRight() }
 	}
 
-	private fun run(createEither: (Int) -> Either<Throwable, Unit>): List<Either<Throwable, Unit>> {
+	private fun run(createEither: (Int) -> Either<Throwable, Any>): List<Either<Throwable, Any>> {
 		val deferredList = (1..THREADS).map { i -> GlobalScope.async { createEither(i) } }
 		return runBlocking { deferredList.map { it.await() } }
 	}

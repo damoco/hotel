@@ -2,22 +2,17 @@ package hotel.service;
 
 import hotel.exception.BookingConflictException;
 import hotel.exception.RoomNotExistException;
-import hotel.model.Bookable;
 import hotel.model.Booking;
 import hotel.model.HotelData;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 public class HotelService {
@@ -41,22 +36,20 @@ public class HotelService {
 		final Set<Integer> r = new TreeSet<>(data.rooms());
 		r.removeAll(bookedOnDate);
 		System.out.printf("findAvailableRoomsOn: %s, %s, %s%n", data.rooms(), bookedOnDate, r);
-		return Set.copyOf(r);
+		return r;
 	}
 
-	public void bookRoom(LocalDate date, int room, String guestName) {
+	public Booking bookRoom(LocalDate date, int room, String guestName) {
 		final Set<Integer> rooms = data.rooms();
 		if (!rooms.contains(room)) throw new RoomNotExistException(room, rooms);
 		final ConcurrentMap<LocalDate, ConcurrentMap<Integer, String>> bookings = data.bookings();
-		if (bookings.containsKey(date)) {
-			final ConcurrentMap<Integer, String> bookingsOnDate = bookings.get(date);
-			if (bookingsOnDate.containsKey(room)) {
-				throw new BookingConflictException(date, room);
-			}
-			bookingsOnDate.put(room, guestName);
-		} else {
-			bookings.put(date, new ConcurrentHashMap<>(Map.of(room, guestName)));
-		}
+		bookings.compute(date, (k, v) -> {
+			if (v == null) return new ConcurrentHashMap<>(Map.of(room, guestName));
+			if (v.containsKey(room)) throw new BookingConflictException(date, room);
+			v.put(room, guestName);
+			return v;
+		});
+		return new Booking(guestName, room, date);
 	}
 
 	public Set<Booking> bookingsByGuest(String guestName) {
