@@ -1,18 +1,8 @@
 package hotel.model;
 
+import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.concurrent.ConcurrentMap;
 
-import static java.util.stream.Collectors.toUnmodifiableSet;
-
-public record HotelData(Set<Integer> rooms, Set<Booking> bookings) {
-
-	public HotelData withBookings(Set<Booking> bookings) {
-		return new HotelData(rooms, bookings);
-	}
-
-	public HotelData addBooking(Booking booking) {
-		return new HotelData(rooms, Stream.concat(bookings.stream(), Stream.of(booking)).collect(toUnmodifiableSet()));
-	}
+public record HotelData(Set<Integer> rooms, ConcurrentMap<LocalDate, ConcurrentMap<Integer, String>> bookings) {
 }
