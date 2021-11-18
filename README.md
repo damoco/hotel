@@ -12,5 +12,5 @@ JDK version: 16
 - Test uses the Kotlin + Kotest Assert library
 
 ## Branch
-OO: Object-oriented style
-master: Data-oriented style
+master: Object-oriented style
+DOP: Data-oriented style

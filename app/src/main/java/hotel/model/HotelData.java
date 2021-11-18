@@ -10,7 +10,7 @@ public record HotelData(Set<Integer> rooms, Set<Booking> bookings) {
 
 	public HotelData(int size, Set<Booking> bookings) {
 		this(IntStream.rangeClosed(1, size).boxed().collect(toUnmodifiableSet()), bookings);
-		System.out.println("configRoomSize: $size");
+		System.out.println("configRoomSize: " + size);
 	}
 
 	public HotelData withBookings(Set<Booking> bookings) {
