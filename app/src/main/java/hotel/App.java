@@ -3,13 +3,10 @@
  */
 package hotel;
 
-public class App {
-    
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.time.LocalDate;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+public class App {
+	public static void main(String[] args) {
+		System.out.println(new HotelController(10).findAvailableRoomsOn(LocalDate.now()));
+	}
 }
