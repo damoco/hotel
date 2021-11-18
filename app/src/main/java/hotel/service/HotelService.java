@@ -56,11 +56,9 @@ public class HotelService {
 
 	public Set<Booking> bookingsByGuest(String guestName) {
 		return data.bookings().entrySet().stream()
-				.map(bookableGuest -> {
-					final Bookable bookable = bookableGuest.getKey();
-					return new Booking(bookableGuest.getValue(), bookable.room(), bookable.date());
-				})
-				.filter(booking -> booking.guestName().equals(guestName))
+				.filter(bookableGuest -> bookableGuest.getValue().equals(guestName))
+				.map(bookableGuest -> bookableGuest.getKey().toBooking(guestName))
 				.collect(toUnmodifiableSet());
 	}
+
 }
