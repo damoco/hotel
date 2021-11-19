@@ -2,6 +2,7 @@ package hotel
 
 import arrow.core.Either
 import hotel.exception.RoomNotExistException
+import hotel.model.Booking
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.inspectors.forExactly
@@ -35,6 +36,19 @@ internal class HotelControllerTest {
 			val c = HotelController(1)
 			c.bookRoom(DATE, 201, "guest")
 		}.message should include("201 not exist")
+	}
+
+	@Test
+	fun bookingNullCheck() {
+		shouldThrowExactly<NullPointerException> {
+			Booking(null, 1, DATE)
+		}.message should include("guestName")
+		shouldThrowExactly<NullPointerException> {
+			Booking("null", 1, null as LocalDate?)
+		}.message should include("date")
+		shouldThrowExactly<NullPointerException> {
+			Booking("null", 1, null as String?)
+		}.message should include("date")
 	}
 
 	@Test
