@@ -7,7 +7,11 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import java.time.Clock
 import java.time.LocalDate
+import java.time.ZoneId
+
+private val zoneId = ZoneId.systemDefault()
 
 class HotelSteps {
 	private lateinit var availableRooms: Set<Int>
@@ -18,6 +22,11 @@ class HotelSteps {
 	@Given("The hotel has {int} rooms")
 	fun the_hotel_has_rooms(size: Int) {
 		controller = HotelController(size)
+	}
+
+	@Given("today is {date}")
+	fun todayIs(date: LocalDate) {
+		controller.clock = Clock.fixed(date.atStartOfDay().atZone(zoneId).toInstant(), zoneId)
 	}
 
 	@Given("The following rooms are booked:")

@@ -2,6 +2,7 @@ Feature: Hotel
 
   Background:
     Given The hotel has 2 rooms
+    And today is 2021-11-05
     And The following rooms are booked:
       | date       | room |
       | 2021-11-06 | 2    |

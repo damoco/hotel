@@ -1,13 +1,14 @@
 package hotel.service;
 
+import hotel.BookingDateNotValidException;
 import hotel.exception.BookingConflictException;
 import hotel.exception.RoomNotExistException;
 import hotel.model.Bookable;
 import hotel.model.Booking;
 import hotel.model.HotelData;
 
+import java.time.Clock;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,12 +19,21 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public class HotelService {
 	private HotelData data;
+	private Clock clock = Clock.systemDefaultZone();
 
 	public HotelService(int size) {
 		if (size < 1) throw new IllegalArgumentException("Room size cannot less than 1. Current: " + size);
 		final Set<Integer> rooms = IntStream.rangeClosed(1, size).boxed().collect(toUnmodifiableSet());
 		System.out.println("configRoomSize: " + size);
 		data = new HotelData(rooms, new ConcurrentHashMap<>());
+	}
+
+	public Clock getClock() {
+		return clock;
+	}
+
+	public void setClock(Clock clock) {
+		this.clock = clock;
 	}
 
 	public void setBookings(Set<Booking> bookings) {
@@ -43,15 +53,15 @@ public class HotelService {
 	}
 
 	public Booking bookRoom(LocalDate date, int room, String guestName) {
-		Objects.requireNonNull(date);
-		Objects.requireNonNull(guestName);
+		final Booking booking = new Booking(guestName, room, date);
+		if (date.isBefore(LocalDate.now(clock))) throw new BookingDateNotValidException(date);
 		final Set<Integer> rooms = data.rooms();
 		if (!rooms.contains(room)) throw new RoomNotExistException(room, rooms);
-		data.bookings().compute(new Bookable(date, room), (k, v) -> {
+		data.bookings().compute(booking.bookable(), (k, v) -> {
 			if (null != v) throw new BookingConflictException(date, room);
 			return guestName;
 		});
-		return new Booking(guestName, room, date);
+		return booking;
 	}
 
 	public Set<Booking> bookingsByGuest(String guestName) {
@@ -60,5 +70,4 @@ public class HotelService {
 				.map(bookableGuest -> bookableGuest.getKey().toBooking(guestName))
 				.collect(toUnmodifiableSet());
 	}
-
 }
